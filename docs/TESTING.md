@@ -15,7 +15,7 @@ Do these in order. Stop when the next one is more machine than you have.
 | 4. Interactive VM | `nix build .#qemu-vm && ./result/bin/run-didymus-qemu-vm` | `/dev/kvm` |
 | 5. ISO | `nix build .#iso` | lots of disk; not a CI gate |
 
-`didymus-lab` (physical) is the same software as `qemu-lab`. It is **not**
+`didymus-lab` (physical) shares modules and configuration.nix with `qemu-lab`. It is **not**
 bootable in QEMU: it expects disks labelled `didymus-root` and `didymus-boot`.
 Eval and build it anyway — the disks only matter at boot.
 
@@ -28,8 +28,8 @@ nix eval .#nixosConfigurations.didymus-lab.config.system.build.toplevel.drvPath
 This repository is public. Two CI paths:
 
 1. **Garnix** — native Nix CI. Install the [Garnix GitHub App](https://garnix.io)
-   on `getboring/didymus-os`. It builds everything in `garnix.yaml` (eval, VM
-   test, QEMU closure). It does **not** use GitHub Actions minutes.
+   on `getboring/didymus-os`. It builds everything in `garnix.yaml` (checks, devShell,
+   packages.default, qemu-vm, both nixosConfigurations; iso excluded). It does **not** use GitHub Actions minutes.
 2. **GitHub Actions** — `.github/workflows/ci.yml`. Same Determinate Nix path
    as `getboring/boring-agent-appliance`. `workflow_dispatch` works from the
    GitHub mobile app. Needs the account to be able to allocate `ubuntu-24.04`

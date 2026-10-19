@@ -8,7 +8,7 @@ What it does not give us out of the box is an *explicit twin*.
 Didymus adds:
 
 1. **Twin awareness** — every generation can have a stable counterpart.
-2. **Receipts** — signed, content-addressed records of what changed.
+2. **Receipts** — plaintext init file today; signed, content-addressed records are not implemented.
 3. **Tired Test defaults** — configurations that remain understandable when the human is exhausted.
 4. **Transferability** — the next person (or future you) can take over without archaeology.
 
