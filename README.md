@@ -1,3 +1,9 @@
+> **What it is:** A Nix flake that builds two NixOS configurations (didymus-lab and qemu-lab), an opt-in ISO, a QEMU VM script, and a NixOS VM test that boots the lab modules and checks a twin-init oneshot plus files under /etc/didymus.
+> **Status:** DORMANT as of 2026-10-19 (@874faa7)
+> **Live at:** not deployed
+> **Canonical home:** getboring/didymus-os (no Boring-Works/didymus-os mirror)
+> **Run it:** no package.json or Makefile. `nix develop`; `nix eval .#nixosConfigurations.qemu-lab.config.system.build.toplevel.drvPath`; `nix build .#checks.x86_64-linux.didymus-lab -L` (needs /dev/kvm); `nix build .#qemu-vm`
+
 # Didymus OS
 
 **A twin of NixOS.**  
@@ -18,9 +24,9 @@ It is **not** another flashy distro. It is NixOS with a twin soul.
 
 | Concept | What it means |
 |---------|---------------|
-| **Twin generations** | Every rebuild produces a verifiable pair (primary + twin) with signed receipts |
-| **Stable twin / Experimental twin** | Two concurrent profiles you can switch between without losing the other |
-| **Receipts** | Ed25519-signed, content-addressed records of what changed (ScopeBlind-ready) |
+| **Twin generations** | A oneshot writes an unsigned init file; a rebuild does not produce a signed pair |
+| **Stable twin / Experimental twin** | twinMode defaults to stable-experimental; there is no switch command |
+| **Receipts** | Plaintext file under /var/lib/didymus/receipts; not signed or content-addressed |
 | **Tired Test** | Configs must still make sense at 2 a.m. after a long day |
 | **Boring lasts** | Prefer durable, well-understood primitives over novelty |
 
@@ -51,7 +57,7 @@ nix build .#qemu-vm
 ./result/bin/run-didymus-qemu-vm
 ```
 
-From a phone: push to `main` or open a PR. GitHub Actions and Garnix do steps 1–3.  
+From a phone: push to `main` or open a PR. GitHub Actions is wired for steps 1–3; both recorded runs failed before the jobs started, and this commit has no Garnix status.  
 Garnix does **not** use Actions minutes — enable the [Garnix GitHub App](https://garnix.io) on this repo if Actions runners are dark.
 
 Full ladder, including ISO: [`docs/TESTING.md`](docs/TESTING.md).
@@ -61,7 +67,7 @@ Full ladder, including ISO: [`docs/TESTING.md`](docs/TESTING.md).
 | Flake output | What it is | Disks |
 | --- | --- | --- |
 | `nixosConfigurations.didymus-lab` | Physical lab twin | labelled `didymus-root` / `didymus-boot` |
-| `nixosConfigurations.qemu-lab` | Same software, QEMU | virtio, auto-format |
+| `nixosConfigurations.qemu-lab` | Lab modules plus QEMU guest (hostname didymus-qemu) | virtio, auto-format |
 | `checks.x86_64-linux.didymus-lab` | Headless NixOS VM test | none (test driver) |
 | `packages.qemu-vm` | Interactive `run-didymus-qemu-vm` | none on the host |
 | `packages.iso` | Live installer ISO | opt-in, not a CI gate |
@@ -80,7 +86,7 @@ didymus-os/
 ├── hosts/
 │   ├── didymus-lab/          # Software + physical hardware
 │   └── qemu-lab/             # VM overlay (no real disks)
-├── profiles/                 # Ready-to-use profiles (desktop, server, agent, etc.)
+├── profiles/                 # server.nix only; not imported by the flake
 ├── docs/
 │   ├── philosophy.md
 │   └── TESTING.md            # Cloud / QEMU / CI ladder
@@ -90,7 +96,7 @@ didymus-os/
 
 ## Philosophy (one paragraph)
 
-Didymus OS takes the best of NixOS (pure, declarative, rollbacks) and adds an explicit twin layer so you always have a verifiable counterpart. It is designed so that a tired human (or the next operator) can understand the state of the machine without replaying the entire history. Every meaningful change leaves a receipt. Clever breaks are allowed; boring foundations are required.
+Didymus OS takes the best of NixOS (pure, declarative, rollbacks) and adds an explicit twin layer so you always have a verifiable counterpart. It is designed so that a tired human (or the next operator) can understand the state of the machine without replaying the entire history. The twin oneshot writes one unsigned init file; it does not record each change. Clever breaks are allowed; boring foundations are required.
 
 ## Roadmap (first release)
 
@@ -101,7 +107,7 @@ Didymus OS takes the best of NixOS (pure, declarative, rollbacks) and adds an ex
 - [ ] Signed receipts (Ed25519 + content-addressed)
 - [ ] `didymus` CLI (`switch`, `twin`, `receipts`, `verify`)
 - [ ] Minimal desktop + server profiles
-- [ ] ISO builder
+- [x] ISO builder
 - [ ] Integration points for ScopeBlind / MCP safety
 - [ ] Documentation that itself passes the Tired Test
 
