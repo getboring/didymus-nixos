@@ -41,7 +41,7 @@ A physical machine is not required to evaluate, build, or boot a generation.
 You do not need a tablet or a lab box. You need Nix (locally, in Codespaces, or in CI).
 
 ```bash
-git clone https://github.com/getboring/didymus-os.git
+git clone https://github.com/getboring/didymus-nixos.git
 cd didymus-os
 nix develop
 
