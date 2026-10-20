@@ -1,7 +1,7 @@
 > **What it is:** A Nix flake that builds two NixOS configurations (didymus-lab and qemu-lab), an opt-in ISO, a QEMU VM script, and a NixOS VM test that boots the lab modules and checks a twin-init oneshot plus files under /etc/didymus.
 > **Status:** DORMANT as of 2026-10-19 (@874faa7)
 > **Live at:** not deployed
-> **Canonical home:** getboring/didymus-os (no Boring-Works/didymus-os mirror)
+> **Canonical home:** getboring/didymus-nixos (no Boring-Works/didymus-os mirror)
 > **Run it:** no package.json or Makefile. `nix develop`; `nix eval .#nixosConfigurations.qemu-lab.config.system.build.toplevel.drvPath`; `nix build .#checks.x86_64-linux.didymus-lab -L` (needs /dev/kvm); `nix build .#qemu-vm`
 
 # Didymus OS
@@ -41,7 +41,7 @@ A physical machine is not required to evaluate, build, or boot a generation.
 You do not need a tablet or a lab box. You need Nix (locally, in Codespaces, or in CI).
 
 ```bash
-git clone https://github.com/getboring/didymus-os.git
+git clone https://github.com/getboring/didymus-nixos.git
 cd didymus-os
 nix develop
 
