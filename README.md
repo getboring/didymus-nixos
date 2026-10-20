@@ -42,7 +42,7 @@ You do not need a tablet or a lab box. You need Nix (locally, in Codespaces, or 
 
 ```bash
 git clone https://github.com/getboring/didymus-nixos.git
-cd didymus-os
+cd didymus-nixos
 nix develop
 
 # 1. Prove the configs exist (no KVM, seconds)
@@ -75,7 +75,7 @@ Full ladder, including ISO: [`docs/TESTING.md`](docs/TESTING.md).
 ## Project layout
 
 ```
-didymus-os/
+didymus-nixos/
 ├── flake.nix                 # Entry point
 ├── flake.lock                # Pinned nixos-26.05
 ├── garnix.yaml               # Public Nix CI (no Actions minutes)
